@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 
+    TEMPLATE CONFIGURATION FILE
+    
+    1. Rename this file to 'strings.xml'
+    2. Place it in: android/app/src/main/res/values/
+    3. Fill in your API Keys below.
+-->
+<resources>
+    <!-- 
+        Google Sign-In Client ID (Android)
+        Get this from Firebase Console > Authentication > Sign-in method > Google
+        OR from google-services.json (oauth_client with client_type: 3)
+    -->
+    <string name="client_id">YOUR_WEB_CLIENT_ID_HERE</string>
+
+    <!-- 
+        Google Maps API Key (Android)
+        Get this from Google Cloud Console > Credentials > API Keys.
+        Ensure "Maps SDK for Android" is enabled and the key is restricted to your package name.
+    -->
+    <string name="geo_api">YOUR_GOOGLE_MAPS_API_KEY_HERE</string>
+</resources>

@@ -27,12 +27,26 @@ Sebelum memulai, pastikan Anda telah menginstal:
     ```
 
 3.  **Setup Firebase & Google Maps**
-    *   **Android:**
-        *   Pastikan file `android/app/google-services.json` yang valid sudah ada (unduh dari Firebase Console).
-        *   Package Name: `com.sarmagti.kakikenyang`.
-        *   Tambahkan SHA-1 Debug Keystore Anda ke Firebase Console.
-    *   **Maps API:**
-        *   Pastikan API Key di `android/app/src/main/res/values/strings.xml` sudah di-whitelist untuk package `com.sarmagti.kakikenyang`.
+    
+    Aplikasi ini membutuhkan file konfigurasi rahasia yang tidak disertakan dalam repo.
+
+    *   **Firebase (Android):**
+        1.  Buka [Firebase Console](https://console.firebase.google.com/).
+        2.  Download `google-services.json`.
+        3.  Letakkan file tersebut di folder: `android/app/`.
+
+    *   **Google Maps & Auth Keys:**
+        1.  Pergi ke folder `android/app/src/main/res/values/`.
+        2.  Duplikat file `strings.xml.example` dan ubah namanya menjadi `strings.xml`.
+        3.  Buka `strings.xml` dan isi kredensial Anda:
+            *   `client_id`: Web Client ID dari Firebase Auth (Google Sign-In).
+            *   `geo_api`: API Key dari Google Cloud Console (pastikan Maps SDK for Android aktif).
+
+    *   **FlutterFire Config (Opsional):**
+        Jika `firebase_options.dart` hilang, jalankan:
+        ```bash
+        flutterfire configure
+        ```
 
 4.  **Jalankan Aplikasi**
     Hubungkan perangkat Android (pastikan *USB Debugging* aktif) dan jalankan:
