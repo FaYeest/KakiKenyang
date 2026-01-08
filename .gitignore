@@ -50,5 +50,10 @@ key.properties
 *.keystore
 *.jks
 
+# Firebase & Secrets (Added for security)
+google-services.json
+GoogleService-Info.plist
+firebase_options.dart
+
 # Documentation
 !docs/
