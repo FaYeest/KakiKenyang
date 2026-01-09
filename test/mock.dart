@@ -1,36 +1,47 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';
 
-typedef Callback = void Function(MethodCall call);
-
-void setupFirebaseAuthMocks([Callback? customHandlers]) {
+void setupFirebaseAuthMocks() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  const MethodChannel channel = MethodChannel('plugins.flutter.io/firebase_auth');
-  
+  // Mocking the MethodChannel for Firebase Auth
+  const MethodChannel authChannel = MethodChannel('plugins.flutter.io/firebase_auth');
   TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockMethodCallHandler(
-    channel,
+    authChannel,
     (MethodCall methodCall) async {
-      if (methodCall.method == 'Auth#registerIdTokenListener') {
+      if (methodCall.method == 'Auth#registerIdTokenListener' ||
+          methodCall.method == 'Auth#authStateChanges' ||
+          methodCall.method == 'Auth#idTokenChanges' ||
+          methodCall.method == 'Auth#userChanges') {
         return null;
-      }
-      if (methodCall.method == 'Auth#authStateChanges') {
-        return null;
-      }
-       if (methodCall.method == 'Auth#idTokenChanges') {
-        return null;
-      }
-      if (methodCall.method == 'Auth#userChanges') {
-        return null;
-      }
-      if (customHandlers != null) {
-        customHandlers(methodCall);
       }
       return null;
     },
   );
 
-  // Mock Firebase Core initialization
+  // Mocking the Pigeon Channel for Firebase Core (Newer versions)
+  const MethodChannel corePigeonChannel = MethodChannel(
+    'dev.flutter.pigeon.firebase_core_platform_interface.FirebaseCoreHostApi.initializeCore',
+  );
+  
+  TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockMethodCallHandler(
+    corePigeonChannel,
+    (MethodCall methodCall) async {
+      return {
+        'name': '[DEFAULT]',
+        'options': {
+          'apiKey': '123',
+          'appId': '123',
+          'messagingSenderId': '123',
+          'projectId': '123',
+        },
+        'pluginConstants': {},
+      };
+    },
+  );
+
+  // Fallback for older MethodChannel style
   const MethodChannel coreChannel = MethodChannel('plugins.flutter.io/firebase_core');
   TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockMethodCallHandler(
     coreChannel,
@@ -48,13 +59,6 @@ void setupFirebaseAuthMocks([Callback? customHandlers]) {
             'pluginConstants': {},
           }
         ];
-      }
-      if (methodCall.method == 'Firebase#initializeApp') {
-        return {
-          'name': methodCall.arguments['appName'],
-          'options': methodCall.arguments['options'],
-          'pluginConstants': {},
-        };
       }
       return null;
     },
