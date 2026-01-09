@@ -2,9 +2,10 @@ name: KakiKenyang CI/CD Pipeline
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main", "dev" ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ "main", "dev" ]
+  workflow_dispatch:
 
 # Concurrency: Batalkan build sebelumnya jika ada push baru di branch yang sama
 concurrency:
