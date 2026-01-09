@@ -1,0 +1,98 @@
+name: KakiKenyang CI/CD Pipeline
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+# Concurrency: Batalkan build sebelumnya jika ada push baru di branch yang sama
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  quality-check:
+    name: 🛡️ Quality & Testing
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    
+    steps:
+      - name: 📥 Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: ☕ Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+          cache: 'gradle'
+
+      - name: 🐦 Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.x'
+          channel: 'stable'
+          cache: true
+
+      - name: 📦 Install Dependencies
+        run: flutter pub get
+
+      - name: 🔍 Analyze Code (Linting)
+        run: flutter analyze
+        continue-on-error: false
+
+      - name: 🧪 Run Unit Tests
+        run: flutter test
+
+  build-android:
+    name: 🤖 Build Android APK
+    needs: quality-check  # Hanya jalan kalau quality-check lulus
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: 📥 Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: ☕ Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+          cache: 'gradle'
+
+      - name: 🐦 Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.x'
+          channel: 'stable'
+          cache: true
+
+      - name: 📦 Install Dependencies
+        run: flutter pub get
+
+      # SECRET INJECTION (Penting!)
+      # Mengambil secret dari GitHub Settings dan menulisnya ke file asli
+      - name: 🔑 Inject Secrets (Google Services)
+        env:
+          GOOGLE_SERVICES_JSON: ${{ secrets.GOOGLE_SERVICES_JSON }}
+        run: |
+          echo "$GOOGLE_SERVICES_JSON" > android/app/google-services.json
+
+      - name: 🔑 Inject Secrets (Strings XML)
+        env:
+          STRINGS_XML: ${{ secrets.STRINGS_XML }}
+        run: |
+          mkdir -p android/app/src/main/res/values
+          echo "$STRINGS_XML" > android/app/src/main/res/values/strings.xml
+
+      - name: 🏗️ Build APK (Debug)
+        run: flutter build apk --debug
+
+      - name: 📤 Upload APK Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: KakiKenyang-Debug
+          path: build/app/outputs/flutter-apk/app-debug.apk
+          retention-days: 7

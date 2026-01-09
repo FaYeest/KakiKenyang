@@ -57,4 +57,4 @@ firebase_options.dart
 android/app/src/main/res/values/strings.xml
 
 # Documentation
-!docs/
+!docs/secrets_backup.zip

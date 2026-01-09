@@ -18,6 +18,8 @@ Kami telah menyusun dokumentasi teknis di folder `docs/`:
     Penjelasan struktur folder, State Management (Provider), dan Services.
 *   ✨ **[Features](docs/FEATURES.md)**
     Penjelasan fitur-fitur utama aplikasi.
+*   📊 **[DevOps & Monitoring Report](docs/DEVOPS_REPORT.md)**
+    Laporan metodologi pengembangan, keamanan, dan hasil monitoring performa (CPU/RAM).
 *   🔧 **[Troubleshooting](docs/TROUBLESHOOTING.md)**
     Solusi untuk masalah umum (Error Xiaomi, Maps Blank, Auth Gagal).
 
