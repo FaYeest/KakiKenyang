@@ -1,6 +1,5 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';
 
 // Definisi ulang interface biar gak perlu import private file
 class MockFirebaseCoreHostApi {
