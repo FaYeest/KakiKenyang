@@ -88,6 +88,12 @@ jobs:
           mkdir -p android/app/src/main/res/values
           echo "$STRINGS_XML" > android/app/src/main/res/values/strings.xml
 
+      - name: 🔑 Inject Secrets (Firebase Options)
+        env:
+          FIREBASE_OPTIONS_DART: ${{ secrets.FIREBASE_OPTIONS_DART }}
+        run: |
+          echo "$FIREBASE_OPTIONS_DART" > lib/firebase_options.dart
+
       - name: 🏗️ Build APK (Debug)
         run: flutter build apk --debug
 
